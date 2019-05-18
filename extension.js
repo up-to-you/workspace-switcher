@@ -5,8 +5,6 @@ const Shell = imports.gi.Shell;
 const Main = imports.ui.main;
 const GlobalScreen = global.screen;
 
-const MAPPED_KEY = "Control_R";
-
 // gsettings set org.gnome.shell.app-switcher current-workspace-only true
 // gsettings set org.gnome.shell.keybindings toggle-overview "['<Super>s']"
 
@@ -54,9 +52,28 @@ const KeyManager = new Lang.Class({
     }
 });
 
+function hotkeyCallback() {
+    let activeIdx = GlobalScreen.get_active_workspace().index();
+    // just flip between 0 & 1
+    activeIdx ^= 1;
+    GlobalScreen.get_workspace_by_index(activeIdx).activate(global.get_current_time())
+    // log("Hot keys are working!!!" + Math.random());
+}
+
+function moveActiveWindow() {
+    let activeIdx = GlobalScreen.get_active_workspace().index();
+    // just flip between 0 & 1
+    activeIdx ^= 1;
+    // global.screen.get_active_workspace().index()
+    // global.screen.get_workspace_by_index(1).activate()
+    // global.display.get_focus_window()
+    global.display.get_focus_window().change_workspace_by_index(activeIdx, false);
+}
+
 function init() {
     disableWorskpacePopupWindow();
-    setupGlobalKeyListener(MAPPED_KEY);
+    setupGlobalKeyListener("Control_R", hotkeyCallback);
+    setupGlobalKeyListener("<ctrl>Control_R", moveActiveWindow);
 }
 
 function enable() {
@@ -71,18 +88,7 @@ function disableWorskpacePopupWindow() {
     WorkspaceSwitcherPopup.WorkspaceSwitcherPopup.prototype._show = function() { return false };
 }
 
-function hotkeyCallback() {
-    let activeIdx = GlobalScreen.get_active_workspace().index();
-    // just flip between 0 & 1
-    activeIdx ^= 1;
-    GlobalScreen.get_workspace_by_index(activeIdx).activate(global.get_current_time())
-    // global.screen.get_active_workspace().index()
-    // global.screen.get_workspace_by_index(1).activate()
-    // log("Hot keys are working!!!" + Math.random());
-    return true;
-}
-
-function setupGlobalKeyListener(key) {
+function setupGlobalKeyListener(key, callbackFunc) {
     let keyManager = new KeyManager()
-    keyManager.listenFor(key, hotkeyCallback);
+    keyManager.listenFor(key, callbackFunc);
 }
