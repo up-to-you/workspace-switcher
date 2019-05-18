@@ -52,7 +52,7 @@ const KeyManager = new Lang.Class({
     }
 });
 
-function hotkeyCallback() {
+function switchNextWorkspace() {
     let activeIdx = GlobalScreen.get_active_workspace().index();
     // just flip between 0 & 1
     activeIdx ^= 1;
@@ -60,7 +60,7 @@ function hotkeyCallback() {
     // log("Hot keys are working!!!" + Math.random());
 }
 
-function moveActiveWindow() {
+function moveActiveWindowNextWorkspace() {
     let activeIdx = GlobalScreen.get_active_workspace().index();
     // just flip between 0 & 1
     activeIdx ^= 1;
@@ -72,8 +72,8 @@ function moveActiveWindow() {
 
 function init() {
     disableWorskpacePopupWindow();
-    setupGlobalKeyListener("Control_R", hotkeyCallback);
-    setupGlobalKeyListener("<ctrl>Control_R", moveActiveWindow);
+    setupGlobalKeyListener("Control_R", switchNextWorkspace);
+    setupGlobalKeyListener("<ctrl>Control_R", moveActiveWindowNextWorkspace);
 }
 
 function enable() {
