@@ -111,8 +111,12 @@ function moveActiveWindowNextWorkspace() {
     // just flip between 0 & 1
     activeIdx ^= 1;
 
-    global.display.get_focus_window().change_workspace_by_index(activeIdx, false);
-    GlobalScreen.get_workspace_by_index(activeIdx).activate(global.get_current_time());
+    let focusedWin = global.display.get_focus_window();
+    
+    focusedWin.change_workspace_by_index(activeIdx, false);
+    focusedWin.activate(global.get_current_time());
+
+    // GlobalScreen.get_workspace_by_index(activeIdx).activate(global.get_current_time());
     showLabel(activeIdx);
 }
 
