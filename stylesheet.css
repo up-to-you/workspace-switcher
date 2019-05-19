@@ -1,12 +1,10 @@
 /* Example stylesheet */
-/* .workspace-flag { */
-    /* font-size: 27px; */
-    /* font-weight: bold; */
+.workspace-flag {
+    font-size: 37px;
+    font-weight: bold;
     /* font-style: oblique; */
-    /* text-align:right;  */
-    /* margin:0px auto 0px auto; */
     /* color: #ffffff; */
     /* padding-right: 5px; */
     /* background-color: rgba(10,10,10,0.7); */
     /* border-radius: 5px; */
-/* } */
+}
