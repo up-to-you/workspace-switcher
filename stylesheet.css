@@ -1,10 +1,6 @@
 /* Example stylesheet */
 .workspace-flag {
-    font-size: 37px;
+    font-size: 27px;
     font-weight: bold;
-    /* font-style: oblique; */
-    /* color: #ffffff; */
-    /* padding-right: 5px; */
-    /* background-color: rgba(10,10,10,0.7); */
-    /* border-radius: 5px; */
+    text-shadow: -2px -2px 3px #000, 2px -2px 3px #000;
 }

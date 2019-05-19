@@ -11,6 +11,8 @@ const Mainloop = imports.mainloop;
 // gsettings set org.gnome.shell.app-switcher current-workspace-only true
 // gsettings set org.gnome.shell.keybindings toggle-overview "['<Super>s']"
 
+let dateTimeActor = Main.panel.statusArea.dateMenu.actor;
+
 const KeyManager = new Lang.Class({
     Name: 'MyKeyManager',
 
@@ -55,6 +57,8 @@ const KeyManager = new Lang.Class({
 
 const label = new St.Label({ style_class: 'workspace-flag', text: "1" });
 
+var sources_id;
+
 function disableWorskpacePopupWindow() {
     WorkspaceSwitcherPopup.ANIMATION_TIME = 0;
     WorkspaceSwitcherPopup.DISPLAY_TIMEOUT = 0;
@@ -62,9 +66,11 @@ function disableWorskpacePopupWindow() {
 
     let monitor = global.screen.get_monitor_geometry(0);
     let width = Math.floor(monitor.width / 2 - label.get_width() / 2);
-    let heigh = Math.floor(label.height * 1.7);
+    // let height = Math.floor(label.height * 1.877);
+    // due to hide top bar extension
+    // height = 0;
 
-    label.set_position(width, heigh);
+    label.set_position(width, -1);
 
     hideLabel();
     global.stage.add_actor(label);
@@ -72,15 +78,25 @@ function disableWorskpacePopupWindow() {
 
 function hideLabel() {
     label.hide();
+    sources_id = undefined;
+    dateTimeActor.show();
 }
 
 function showLabel(currentWrkIndex) {
+    dateTimeActor.hide();
     label.set_text(''+(currentWrkIndex+1));
     label.show();
-    Mainloop.timeout_add(1070, hideLabel);
+    sources_id = Mainloop.timeout_add(700, hideLabel);
+}
+
+function clearTimedHide() {
+    if(sources_id) {
+        Mainloop.source_remove(sources_id);
+    }
 }
 
 function switchNextWorkspace() {
+    clearTimedHide();
     let activeIdx = GlobalScreen.get_active_workspace().index();
     // just flip between 0 & 1
     activeIdx ^= 1;
@@ -90,6 +106,7 @@ function switchNextWorkspace() {
 }
 
 function moveActiveWindowNextWorkspace() {
+    clearTimedHide();
     let activeIdx = GlobalScreen.get_active_workspace().index();
     // just flip between 0 & 1
     activeIdx ^= 1;
@@ -99,7 +116,7 @@ function moveActiveWindowNextWorkspace() {
     showLabel(activeIdx);
 }
 
-function closeAppsCurrentWorkspace() { 
+function closeAppsCurrentWorkspace() {
     GlobalScreen.get_active_workspace();
     
     // let pid = current_window.get_pid();
