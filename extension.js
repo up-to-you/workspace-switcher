@@ -140,7 +140,8 @@ function init() {
     let keyMngr = new KeyManager();
     keyMngr.listenFor("Control_R", switchNextWorkspace);
     keyMngr.listenFor("<ctrl>Control_R", moveActiveWindowNextWorkspace);
-    keyMngr.listenFor("<ctrl><alt><shift>Control_R", closeAppsCurrentWorkspace);
+    // TODO:
+    //keyMngr.listenFor("<ctrl><alt><shift>Control_R", closeAppsCurrentWorkspace);
 }
 
 function enable() {
