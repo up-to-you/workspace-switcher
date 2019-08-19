@@ -3,7 +3,7 @@ const Lang = imports.lang;
 const Meta = imports.gi.Meta;
 const Shell = imports.gi.Shell;
 const Main = imports.ui.main;
-const GlobalScreen = global.screen;
+const WorkspaceManager = global.workspace_manager;
 
 const St = imports.gi.St;
 const Mainloop = imports.mainloop;
@@ -28,7 +28,7 @@ const KeyManager = new Lang.Class({
     },
 
     listenFor: function(accelerator, callback) {
-        let action = global.display.grab_accelerator(accelerator)
+        let action = global.display.grab_accelerator(accelerator, 0)
 
         if(action != Meta.KeyBindingAction.NONE) {
             // log('Grabbed accelerator [action={}]', action)
@@ -64,8 +64,7 @@ function disableWorskpacePopupWindow() {
     WorkspaceSwitcherPopup.DISPLAY_TIMEOUT = 0;
     WorkspaceSwitcherPopup.WorkspaceSwitcherPopup.prototype._show = function() { return false };
 
-    let monitor = global.screen.get_monitor_geometry(0);
-    let width = Math.floor(monitor.width / 2 - label.get_width() / 2);
+    let width = Math.floor(global.screen_width / 2 - label.get_width() / 2);
     // let height = Math.floor(label.height * 1.877);
     // due to hide top bar extension
     // height = 0;
@@ -97,17 +96,17 @@ function clearTimedHide() {
 
 function switchNextWorkspace() {
     clearTimedHide();
-    let activeIdx = GlobalScreen.get_active_workspace().index();
+    let activeIdx = WorkspaceManager.get_active_workspace().index();
     // just flip between 0 & 1
     activeIdx ^= 1;
-    GlobalScreen.get_workspace_by_index(activeIdx).activate(global.get_current_time())
+    WorkspaceManager.get_workspace_by_index(activeIdx).activate(global.get_current_time())
     
     showLabel(activeIdx);
 }
 
 function moveActiveWindowNextWorkspace() {
     clearTimedHide();
-    let activeIdx = GlobalScreen.get_active_workspace().index();
+    let activeIdx = WorkspaceManager.get_active_workspace().index();
     // just flip between 0 & 1
     activeIdx ^= 1;
 
@@ -116,12 +115,12 @@ function moveActiveWindowNextWorkspace() {
     focusedWin.change_workspace_by_index(activeIdx, false);
     focusedWin.activate(global.get_current_time());
 
-    // GlobalScreen.get_workspace_by_index(activeIdx).activate(global.get_current_time());
+    // WorkspaceManager.get_workspace_by_index(activeIdx).activate(global.get_current_time());
     showLabel(activeIdx);
 }
 
 function closeAppsCurrentWorkspace() {
-    GlobalScreen.get_active_workspace();
+    WorkspaceManager.get_active_workspace();
     
     // let pid = current_window.get_pid();
     // try {
